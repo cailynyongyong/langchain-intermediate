@@ -103,6 +103,7 @@ qa_prompt = ChatPromptTemplate.from_messages(
 
 question_answer_chain = create_stuff_documents_chain(chat, qa_prompt)
 
+# 결과값은 input, chat_history, context, answer 포함함.
 rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
 
 # from langchain_core.messages import HumanMessage
@@ -127,18 +128,20 @@ if "openai_model" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# 대화 내용을 기록하기 위해 셋업
+# Streamlit 특성상 활성화하지 않으면 내용이 다 날아감.
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
         
-# Define a threshold for the maximum number of messages before deletion occurs
+# 프롬프트 비용이 너무 많이 소요되는 것을 방지하기 위해
 MAX_MESSAGES_BEFORE_DELETION = 4
 
 # 웹사이트에서 유저의 인풋을 받고 위에서 만든 AI 에이전트 실행시켜서 답변 받기
 if prompt := st.chat_input("Dalpha AI store는 어떻게 사용하나요?"):
     
 # 유저가 보낸 질문이면 유저 아이콘과 질문 보여주기
-     # Check if the number of messages exceeds the threshold
+     # 만약 현재 저장된 대화 내용 기록이 4개보다 많으면 자르기
     if len(st.session_state.messages) >= MAX_MESSAGES_BEFORE_DELETION:
         # Remove the first two messages
         del st.session_state.messages[0]
@@ -155,6 +158,7 @@ if prompt := st.chat_input("Dalpha AI store는 어떻게 사용하나요?"):
 
         result = rag_chain.invoke({"input": prompt, "chat_history": st.session_state.messages})
 
+        # 증거자료 보여주기
         with st.expander("Evidence context"):
             st.write(result["context"])
 

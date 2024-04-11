@@ -7,6 +7,10 @@
 # sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 # ---------------------------------------------------
 
+# Streamlit 배포하고 싶다면
+# Streamlit 앱의 환경설정에서 꼭 OPENAI_API_KEY = "sk-blabalabla"를 추가해주세요!
+# os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+
 # 필요한 모듈들 불러오기 
 import streamlit as st
 from langchain_community.llms import OpenAI
@@ -22,10 +26,6 @@ load_dotenv()
 import openai
 import os
 openai.api_key= os.environ.get("OPENAI_API_KEY")
-
-# Streamlit 배포하고 싶다면
-# Streamlit 앱의 환경설정에서 꼭 OPENAI_API_KEY = "sk-blabalabla"를 추가해주세요!
-# os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 # OpenAI LLM 셋업하기. temperature = 0.9는 더 창의적인 프롬프트를 생성하라는 뜻.
 llm = OpenAI(temperature=0.9)
