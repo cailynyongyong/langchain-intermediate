@@ -10,6 +10,7 @@ sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 # Streamlit 배포할때
 # Streamlit 앱의 환경설정에서 꼭 OPENAI_API_KEY = "sk-blabalabla"를 추가해주세요!
 import os
+import streamlit as st
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 # from dotenv import load_dotenv
@@ -17,7 +18,6 @@ os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 # import openai
 # import os
 # openai.api_key= os.environ.get("OPENAI_API_KEY")
-import streamlit as st
 import time
 from langchain_openai import ChatOpenAI
 
