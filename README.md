@@ -11,3 +11,9 @@ pip install --upgrade --quiet  langchain langchain-community langchainhub langch
 ```
 
 If streamlit is not working, checkout their [installation page](https://docs.streamlit.io/library/get-started/installation)
+
+requirements.txt 다운받는 방법
+
+```
+pip install -r /path/to/requirements.txt
+```
