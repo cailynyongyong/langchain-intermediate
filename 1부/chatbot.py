@@ -1,8 +1,22 @@
-from dotenv import load_dotenv
-load_dotenv()
-import openai
+# 여기서부터 세줄은 로컬환경에서 돌릴 때에는(즉 웹사이트로 배포 안하고 그냥 터미널에서 돌릴때) 주석처리 해주셔야합니다.
+# 배포할때에는 주석처리하시면 안됩니다.
+# 주석처리 방법은 "Ctrl + "/"" 누르기
+# ---------------------------------------------------
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# ---------------------------------------------------
+
+# Streamlit 배포할때
+# Streamlit 앱의 환경설정에서 꼭 OPENAI_API_KEY = "sk-blabalabla"를 추가해주세요!
 import os
-openai.api_key= os.environ.get("OPENAI_API_KEY")
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+
+# from dotenv import load_dotenv
+# load_dotenv()
+# import openai
+# import os
+# openai.api_key= os.environ.get("OPENAI_API_KEY")
 import streamlit as st
 import time
 from langchain_openai import ChatOpenAI
