@@ -103,7 +103,7 @@ if uploaded_file is not None:
     base64_image = encode_image(uploaded_file)
 
     # OpenAI API Key
-    api_key = "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"
+    api_key = "OPENAI_API_KEY"
 
     headers = {
       "Content-Type": "application/json",
