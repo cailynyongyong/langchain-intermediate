@@ -193,3 +193,4 @@ wrapt==1.16.0
 yarg==0.1.9
 yarl==1.9.4
 zipp==3.18.1
+pysqlite3-binary
