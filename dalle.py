@@ -9,11 +9,7 @@
 
 # 필요한 모듈들 불러오기 
 import streamlit as st
-from langchain.chains import LLMChain
 from langchain_community.llms import OpenAI
-from langchain.prompts import PromptTemplate
-from langchain.memory import ConversationBufferMemory
-from langchain_community.chat_message_histories import StreamlitChatMessageHistory
 import requests
 from io import BytesIO
 
@@ -46,87 +42,85 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 if user_query := st.chat_input(placeholder="Design a greeting card for Christmas"):
-    # st.chat_message("user").write(user_query)
-    # add_message("human", user_query)
     st.session_state.messages.append({"role": "user", "content": user_query})
     with st.chat_message("user"):
         st.markdown(user_query)
 
     # 생성된 이미지 보여주기!
     with st.chat_message("assistant"):
-        # # DALLE 3 사용할 경우 (한개의 이미지만 생성 가능)
-        # response = client.images.generate(
-        #     model="dall-e-3",
-        #     prompt=user_query,
-        #     size="1024x1024",
-        #     quality="standard",
-        #     n=1,
-        # )
-
-        # image_url = response.data[0].url
-        # st.image(image_url)
-
-        # response = requests.get(image_url)
-        # if response.status_code == 200:
-        #     # Prepare the file to download
-        #     img_bytes = BytesIO(response.content)
-        #     img_bytes.name = 'downloaded_image.jpg'  # or the appropriate file extension
-        #     st.download_button(
-        #         label="이미지 다운로드",
-        #         data=img_bytes,
-        #         file_name=img_bytes.name,
-        #         mime="image/jpeg"  # or the appropriate MIME type
-        #     )
-        # else:
-        #     st.error("Failed to download the image.")
-
-        # st.session_state.messages.append({"role": "assistant", "content": image_url})
-
-        # DALLE 2 사용할 경우 (여러개의 이미지를 만들 수 있음. n=2 개수만큼 만들어줌.)
+        # DALLE 3 사용할 경우 (한개의 이미지만 생성 가능)
         response = client.images.generate(
-            model="dall-e-2",
+            model="dall-e-3",
             prompt=user_query,
             size="1024x1024",
             quality="standard",
-            n=2,
+            n=1,
         )
 
         image_url = response.data[0].url
-        image_url2 = response.data[1].url
+        st.image(image_url)
 
-        col1, col2 = st.columns(2)
-        with col1:
-            st.image(image_url)
-            response = requests.get(image_url)
-            if response.status_code == 200:
-                # Prepare the file to download
-                img_bytes = BytesIO(response.content)
-                img_bytes.name = 'downloaded_image.jpg'  # or the appropriate file extension
-                st.download_button(
-                    label="이미지 다운로드",
-                    data=img_bytes,
-                    file_name=img_bytes.name,
-                    mime="image/jpeg"  # or the appropriate MIME type
-                )
-            else:
-                st.error("Failed to download the image.")
+        response = requests.get(image_url)
+        if response.status_code == 200:
+            # Prepare the file to download
+            img_bytes = BytesIO(response.content)
+            img_bytes.name = 'downloaded_image.jpg'  # or the appropriate file extension
+            st.download_button(
+                label="이미지 다운로드",
+                data=img_bytes,
+                file_name=img_bytes.name,
+                mime="image/jpeg"  # or the appropriate MIME type
+            )
+        else:
+            st.error("Failed to download the image.")
 
-        with col2:
-            st.image(image_url2)
-            response = requests.get(image_url2)
-            if response.status_code == 200:
-                # Prepare the file to download
-                img_bytes = BytesIO(response.content)
-                img_bytes.name = 'downloaded_image2.jpg'  # or the appropriate file extension
-                st.download_button(
-                    label="이미지 다운로드",
-                    data=img_bytes,
-                    file_name=img_bytes.name,
-                    mime="image/jpeg"  # or the appropriate MIME type
-                )
-            else:
-                st.error("Failed to download the image.")
+        st.session_state.messages.append({"role": "assistant", "content": image_url})
 
-    st.session_state.messages.append({"role": "assistant", "content": [image_url, image_url]})
+    #     # DALLE 2 사용할 경우 (여러개의 이미지를 만들 수 있음. n=2 개수만큼 만들어줌.)
+    #     response = client.images.generate(
+    #         model="dall-e-2",
+    #         prompt=user_query,
+    #         size="1024x1024",
+    #         quality="standard",
+    #         n=2,
+    #     )
+
+    #     image_url = response.data[0].url
+    #     image_url2 = response.data[1].url
+
+    #     col1, col2 = st.columns(2)
+    #     with col1:
+    #         st.image(image_url)
+    #         response = requests.get(image_url)
+    #         if response.status_code == 200:
+    #             # Prepare the file to download
+    #             img_bytes = BytesIO(response.content)
+    #             img_bytes.name = 'downloaded_image.jpg'  # or the appropriate file extension
+    #             st.download_button(
+    #                 label="이미지 다운로드",
+    #                 data=img_bytes,
+    #                 file_name=img_bytes.name,
+    #                 mime="image/jpeg"  # or the appropriate MIME type
+    #             )
+    #         else:
+    #             st.error("Failed to download the image.")
+
+    #     with col2:
+    #         st.image(image_url2)
+    #         response = requests.get(image_url2)
+    #         if response.status_code == 200:
+    #             # Prepare the file to download
+    #             img_bytes = BytesIO(response.content)
+    #             img_bytes.name = 'downloaded_image2.jpg'  # or the appropriate file extension
+    #             st.download_button(
+    #                 label="이미지 다운로드",
+    #                 data=img_bytes,
+    #                 file_name=img_bytes.name,
+    #                 mime="image/jpeg"  # or the appropriate MIME type
+    #             )
+    #         else:
+    #             st.error("Failed to download the image.")
+
+    # st.session_state.messages.append({"role": "assistant", "content": [image_url, image_url]})
 
 
