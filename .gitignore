@@ -4,3 +4,4 @@ client.py
 quickstart.py
 serve.py
 test.py
+credentials.json
