@@ -2,23 +2,23 @@
 # 배포할때에는 주석처리하시면 안됩니다.
 # 주석처리 방법은 "Ctrl + "/"" 누르기
 # ---------------------------------------------------
-# __import__('pysqlite3')
-# import sys
-# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 # ---------------------------------------------------
 
-# # Streamlit 배포할때
-# # Streamlit 앱의 환경설정에서 꼭 OPENAI_API_KEY = "sk-blabalabla"를 추가해주세요!
-# import os
-# import streamlit as st
-# os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+# Streamlit 배포할때
+# Streamlit 앱의 환경설정에서 꼭 OPENAI_API_KEY = "sk-blabalabla"를 추가해주세요!
+import os
+import streamlit as st
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 import streamlit as st
 from dotenv import load_dotenv
 load_dotenv()
 import openai
-import os
-openai.api_key= os.environ.get("OPENAI_API_KEY")
+# import os
+# openai.api_key= os.environ.get("OPENAI_API_KEY")
 import time
 from langchain_openai import ChatOpenAI
 
@@ -61,6 +61,17 @@ retriever = vectorstore.as_retriever(k=2)
 
 # 이전의 메시지들과 최신 사용자 질문을 분석해, 문맥에 대한 정보가 없이 혼자서만 봤을때 이해할 수 있도록 질문을 다시 구성함
 # 즉 새로 들어온 그 질문 자체에만 집중할 수 있도록 다시 재편성
+
+# 예시: 
+# 원래 대화 기록:
+
+# 	•	사용자: “사과 주스의 효능은 무엇인가요?”
+# 	•	어시스턴트: “사과 주스는 비타민과 항산화제가 풍부합니다.”
+# 	•	사용자: “그럼 하루에 얼마나 마셔야 하나요?”
+
+# 재구성된 질문:
+
+# 	•	“그럼 하루에 얼마나 마셔야 하나요?“를 직접 처리하는 대신, 시스템이 “건강을 위해 하루에 사과 주스를 얼마나 마셔야 하나요?“로 재구성합니다.
 from langchain.chains import create_history_aware_retriever
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
@@ -83,7 +94,7 @@ history_aware_retriever = create_history_aware_retriever(
     chat, retriever, contextualize_q_prompt
 )
 
-# 두번째 단계로, 방금 전 생성한 체인을 사용하여 문서를 불러올 수 있는 retriever 체인을 생성합니다.
+# 두번째 단계로, 질문과 답변할 수 있는 LLM chain을 만들어서 RAG chain과 연결시킵니다.
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 
@@ -103,21 +114,9 @@ qa_prompt = ChatPromptTemplate.from_messages(
 
 question_answer_chain = create_stuff_documents_chain(chat, qa_prompt)
 
-# 결과값은 input, chat_history, context, answer 포함함.
+# Chaining 과정: retriever와 질문과 답변할 수 있는 LLM chain을 서로 연결시킨다
+#  결과값은 input, chat_history, context, answer 포함함.
 rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
-
-# from langchain_core.messages import HumanMessage
-
-# chat_history = []
-
-# question = "Dalpha AI Store는 어떻게 사용하나요?"
-# ai_msg_1 = rag_chain.invoke({"input": question, "chat_history": chat_history})
-# chat_history.extend([HumanMessage(content=question), ai_msg_1["answer"]])
-
-# second_question = "그 외 다른 서비스는 어떻게 사용하나요?"
-# ai_msg_2 = rag_chain.invoke({"input": second_question, "chat_history": chat_history})
-
-# print(ai_msg_2["answer"])
 
 # 웹사이트 제목
 st.title("AI Chatbot")
