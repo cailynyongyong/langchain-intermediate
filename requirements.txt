@@ -85,7 +85,7 @@ kubernetes==29.0.0
 langchain==0.1.15
 langchain-chroma==0.1.1
 langchain-community==0.0.32
-langchain-core==0.2.1
+langchain-core==0.1.52
 langchain-openai==0.1.7
 langchain-text-splitters==0.0.1
 langchain-upstage==0.1.5
@@ -222,4 +222,3 @@ yarg==0.1.9
 yarl==1.9.4
 yt-dlp==2024.5.27
 zipp==3.18.1
-pysqlite3-binary
