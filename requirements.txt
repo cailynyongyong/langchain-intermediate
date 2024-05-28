@@ -222,3 +222,4 @@ yarg==0.1.9
 yarl==1.9.4
 yt-dlp==2024.5.27
 zipp==3.18.1
+pysqlite3-binary
