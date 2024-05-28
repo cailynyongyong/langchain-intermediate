@@ -18,23 +18,8 @@ llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 from langchain_community.tools.tavily_search import TavilySearchResults
 search = TavilySearchResults()
 
-from langchain_community.utilities import SerpAPIWrapper
-from langchain.agents import Tool
-params = {
-    "engine": "google_finance",
-    "gl": "us",
-    "hl": "en",
-}
-Financesearch = SerpAPIWrapper(params=params)
-
-finance_tool = Tool(
-    name="finance_tool",
-    description="Search Google Finance for user query when necessary",
-    func=Financesearch.run,
-)
-
 # 에이전트가 사용할 수 있는 툴 만들기
-tools = [search, finance_tool]
+tools = [search]
 
 # 프롬프트 만들어주기
 from langchain import hub
