@@ -1,4 +1,4 @@
-## Devmento 자료
+## Langchain 자료
 
 ### 환경설정
 
